@@ -48,6 +48,6 @@ python web_app.py
 Note: This method of running the program is subject to change. See to-do below.
 ---
 
-## To-do:
+# To-do:
 - [ ] **Visual Polish:** Improve the overall CSS styling (color palette, fonts, spacing) to look more professional.
 - [ ] **Vercel Configuration:** Configure the project for serverless deployment
