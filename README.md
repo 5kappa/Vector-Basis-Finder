@@ -2,7 +2,7 @@
 
 A lightweight web application that calculates the basis of a span of vectors in $\mathbb{R}^n$. Built with **Python (Flask)** and **SymPy**.
 
-## 🛠️ Setup & Installation (FOR DEVELOPMENT ONLY)
+## Setup & Installation (FOR DEVELOPMENT ONLY)
 
 Follow these steps to get the program running on your local machine.
 
@@ -48,6 +48,6 @@ python web_app.py
 Note: This method of running the program is subject to change. See to-do below.
 ---
 
-# To-do:
+### To-do:
 - [ ] **Visual Polish:** Improve the overall CSS styling (color palette, fonts, spacing) to look more professional.
 - [ ] **Vercel Configuration:** Configure the project for serverless deployment
