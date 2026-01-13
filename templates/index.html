@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Basis Calculator</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background-color: #f9f9f9; }
+        
+        .setup-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 30px; margin-bottom: 20px;}
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.9rem; color: #555; margin-bottom: 8px; font-weight: 600; }
+        
+        .math-var { font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.1em; }
+
+        input[type="number"] { padding: 8px; font-size: 1rem; width: 70px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        #vector-container { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start; }
+        .vector-wrapper-input { display: flex; flex-direction: column; align-items: center; }
+
+        .vector-column {
+            display: flex; flex-direction: column; gap: 5px; padding: 8px;
+            border-left: 2px solid #333; border-right: 2px solid #333;
+            border-radius: 8px; background-color: #fff;
+        }
+
+        .cell-input {
+            width: 45px; text-align: center; font-family: 'Courier New', monospace;
+            font-size: 1.1em; border: 1px solid #eee; border-radius: 3px; padding: 5px;
+        }
+        .cell-input:focus { border-color: #007bff; outline: none; background: #f0f8ff; }
+
+        .vector-label { font-weight: bold; margin-bottom: 8px; color: #555; }
+        
+        .action-btn { padding: 12px 30px; font-size: 1rem; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px; margin-top: 25px; font-weight: bold; }
+        .action-btn:hover { background: #218838; }
+
+        .results-wrapper { margin-top: 30px; display: none; }
+        .result-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h3 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .basis-container { display: flex; flex-wrap: wrap; gap: 20px; }
+        .vector-wrapper { display: inline-block; border-left: 2px solid #333; border-right: 2px solid #333; border-radius: 8px; padding: 5px; text-align: center; background: #fff; }
+        .vector-num { display: block; padding: 2px 8px; font-family: 'Courier New', monospace; font-weight: 600; }
+        .error { color: #d9534f; border-left: 5px solid #d9534f; padding: 15px; background: white; margin-top: 20px; display: none;}
+
+        .secondary-btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
+            height: fit-content;
+            align-self: flex-end;
+            margin-bottom: 2px;
+        }
+        .secondary-btn:hover { background: #5a6268; }
+
+        .danger-btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
+            height: fit-content;
+            align-self: flex-end;
+            margin-bottom: 2px;
+        }
+        .danger-btn:hover { background: #c82333; }
+
+        .subtitle {
+            color: #666;
+            margin-top: -15px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Vector Basis Finder</h1>
+    <p class="subtitle">
+        Enter a set of <span class="math-var">m</span> vectors in &#8477;<sup>n</sup> to determine the basis of their span.<br>
+        This tool calculates both the <strong>Subset Basis</strong> (linearly independent columns from your input) and the <strong>Reduced Basis</strong> (simplest unique form).
+    </p>
+
+    <div class="setup-box">
+        <div class="input-group">
+            <label>Vectors (<span class="math-var">m</span>)</label>
+            <input type="number" id="vectorCount" value="3" min="1" max="10" onchange="generateInputs()">
+        </div>
+        <div class="input-group">
+            <label>Dimensions (<span class="math-var">n</span>)</label>
+            <input type="number" id="dimCount" value="3" min="1" max="10" onchange="generateInputs()">
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-left: auto;">
+            <button class="secondary-btn" onclick="randomizeInputs()">Randomize</button>
+            <button class="danger-btn" onclick="resetInputs()">Reset 0</button>
+        </div>
+    </div>
+
+    <div id="vector-container"></div>
+    
+    <button class="action-btn" onclick="calculateBasis()">Calculate Basis</button>
+
+    <div id="error-box" class="error"></div>
+
+    <div id="results-area" class="results-wrapper">
+        <div class="result-section">
+            <h3>1. Subset Basis</h3>
+            <p style="color:#666; font-size:0.9rem;">Linear independent vectors selected from your input.</p>
+            <div id="subset-container" class="basis-container"></div>
+        </div>
+        <div class="result-section">
+            <h3>2. Reduced Basis (RREF)</h3>
+            <p style="color:#666; font-size:0.9rem;">Simplest basis for the column space (often Identity).</p>
+            <div id="reduced-container" class="basis-container"></div>
+        </div>
+    </div>
+
+    <script>
+        generateInputs();
+
+        function generateInputs() {
+            const m = parseInt(document.getElementById('vectorCount').value);
+            const n = parseInt(document.getElementById('dimCount').value);
+            const container = document.getElementById('vector-container');
+            
+            container.innerHTML = ''; 
+
+            for (let i = 1; i <= m; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'vector-wrapper-input';
+                
+                const label = document.createElement('span');
+                label.className = 'vector-label';
+                label.innerHTML = `<span class="math-var">v</span><sub>${i}</sub>`;
+                wrapper.appendChild(label);
+
+                const colDiv = document.createElement('div');
+                colDiv.className = 'vector-column';
+
+                for (let j = 0; j < n; j++) {
+                    const input = document.createElement('input');
+                    input.type = "text";
+                    input.className = "cell-input";
+                    input.placeholder = "0";
+                    input.id = `vec-${i}-${j}`;
+
+                    input.addEventListener('focus', function() { this.select(); });
+
+                    input.addEventListener('keydown', function(e) {
+                        handleNavigation(e, i, j, m, n);
+                    });
+
+                    colDiv.appendChild(input);
+                }
+
+                wrapper.appendChild(colDiv);
+                container.appendChild(wrapper);
+            }
+        }
+
+        function handleNavigation(e, currentVec, currentRow, maxVec, maxDim) {
+            let targetId = null;
+
+            if (e.key === 'Enter' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (currentRow < maxDim - 1) {
+                    targetId = `vec-${currentVec}-${currentRow + 1}`;
+                } else {
+                    if (currentVec < maxVec) {
+                        targetId = `vec-${currentVec + 1}-0`;
+                    }
+                }
+            } 
+            else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (currentRow > 0) {
+                    targetId = `vec-${currentVec}-${currentRow - 1}`;
+                } else {
+                    if (currentVec > 1) {
+                        targetId = `vec-${currentVec - 1}-${maxDim - 1}`;
+                    }
+                }
+            }
+            else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (currentVec < maxVec) {
+                    targetId = `vec-${currentVec + 1}-${currentRow}`;
+                }
+            }
+            else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentVec > 1) {
+                    targetId = `vec-${currentVec - 1}-${currentRow}`;
+                }
+            }
+
+            if (targetId) {
+                const target = document.getElementById(targetId);
+                if (target) target.focus();
+            }
+        }
+
+        async function calculateBasis() {
+            const m = parseInt(document.getElementById('vectorCount').value);
+            const n = parseInt(document.getElementById('dimCount').value);
+            const resultsArea = document.getElementById('results-area');
+            const errorBox = document.getElementById('error-box');
+            
+            resultsArea.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            let combinedText = "";
+            
+            for (let i = 1; i <= m; i++) {
+                let vectorString = "";
+                for (let j = 0; j < n; j++) {
+                    let val = document.getElementById(`vec-${i}-${j}`).value.trim();
+                    if(val === "") val = "0"; 
+                    vectorString += val + " ";
+                }
+                combinedText += vectorString.trim() + "\n";
+            }
+
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vectors_text: combinedText, input_mode: 'rows' })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    resultsArea.style.display = 'block';
+                    renderVectors(data.basis.subset, 'subset-container');
+                    renderVectors(data.basis.reduced, 'reduced-container');
+                } else {
+                    errorBox.innerHTML = "<strong>Error:</strong> " + data.message;
+                    errorBox.style.display = 'block';
+                }
+            } catch (err) {
+                errorBox.innerHTML = "<strong>Network Error:</strong> Check console connection.";
+                errorBox.style.display = 'block';
+            }
+        }
+
+        function renderVectors(vectorList, containerId) {
+            const container = document.getElementById(containerId);
+            if (vectorList.length === 0) {
+                container.innerHTML = "<em>Zero vector space (No basis).</em>";
+                return;
+            }
+            let html = "";
+            vectorList.forEach(vec => {
+                html += `<div class='vector-wrapper'>`;
+                vec.forEach(num => {
+                    if (Object.is(num, -0)) num = 0;
+                    const displayNum = Number.isInteger(num) ? num : num.toFixed(2);
+                    html += `<span class='vector-num'>${displayNum}</span>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function randomizeInputs() {
+            const m = parseInt(document.getElementById('vectorCount').value);
+            const n = parseInt(document.getElementById('dimCount').value);
+            
+            for (let i = 1; i <= m; i++) {
+                for (let j = 0; j < n; j++) {
+                    const field = document.getElementById(`vec-${i}-${j}`);
+                    if (field) {
+                        const rand = Math.floor(Math.random() * 19) - 9;
+                        field.value = rand;
+                    }
+                }
+            }
+        }
+
+        function resetInputs() {
+            const m = parseInt(document.getElementById('vectorCount').value);
+            const n = parseInt(document.getElementById('dimCount').value);
+            
+            for (let i = 1; i <= m; i++) {
+                for (let j = 0; j < n; j++) {
+                    const field = document.getElementById(`vec-${i}-${j}`);
+                    if (field) {
+                        field.value = ""; 
+                    }
+                }
+            }
+            
+            document.getElementById('results-area').style.display = 'none';
+            document.getElementById('error-box').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
