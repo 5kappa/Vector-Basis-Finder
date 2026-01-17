@@ -2,7 +2,11 @@
 
 A lightweight web application that calculates the basis of a span of vectors in $\mathbb{R}^n$. Built with **Python (Flask)** and **SymPy**.
 
-## Setup & Installation (FOR DEVELOPMENT ONLY)
+## Live Demo
+The application is deployed and visitable via the following link:
+**[https://math206-vector-basis-finder.vercel.app/](https://math206-vector-basis-finder.vercel.app/)**
+
+## Setup & Installation for Development
 
 Follow these steps to get the program running on your local machine.
 
@@ -13,7 +17,7 @@ Follow these steps to get the program running on your local machine.
 ### 2. Clone the Repository
 Open your terminal (PowerShell or Command Prompt) and run:
 ```bash
-git clone [https://github.com/5kappa/Vector-Basis-Finder.git](https://github.com/5kappa/Vector-Basis-Finder.git)
+git clone https://github.com/5kappa/Vector-Basis-Finder.git
 cd Vector-Basis-Finder
 ```
 
@@ -49,5 +53,4 @@ Note: This method of running the program is subject to change. See to-do below.
 ---
 
 ### To-do:
-- [ ] **Visual Polish:** Improve the overall CSS styling (color palette, fonts, spacing) to look more professional.
-- [ ] **Vercel Configuration:** Configure the project for serverless deployment
+- [X] **Vercel Configuration:** Configure the project for serverless deployment

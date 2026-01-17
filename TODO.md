@@ -1,2 +1,2 @@
 - [ ] **Visual Polish:** Improve the overall CSS styling (color palette, fonts, spacing) to look more professional.
-- [ ] **Vercel Configuration:** Configure the project for serverless deployment
+- [X] **Vercel Configuration:** Configure the project for serverless deployment
