@@ -1,52 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vector Basis Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background-color: #f9f9f9; }
-        
-        .setup-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 30px; margin-bottom: 20px;}
-        .input-group { display: flex; flex-direction: column; }
-        .input-group label { font-size: 0.9rem; color: #555; margin-bottom: 8px; font-weight: 600; }
-        
-        .math-var { font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.1em; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background-color: #f9f9f9;
+        }
 
-        input[type="number"] { padding: 8px; font-size: 1rem; width: 70px; border: 1px solid #ccc; border-radius: 4px; }
-        
-        #vector-container { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start; }
-        .vector-wrapper-input { display: flex; flex-direction: column; align-items: center; }
+        button {
+            font-family: inherit;
+        }
+
+        .setup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .math-var {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            font-size: 1.15em;
+            padding-right: 0.1em;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            font-size: 1rem;
+            width: 70px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #vector-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .vector-wrapper-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
         .vector-column {
-            display: flex; flex-direction: column; gap: 5px; padding: 8px;
-            border-left: 2px solid #333; border-right: 2px solid #333;
-            border-radius: 8px; background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+            background-color: #fff;
+            padding: 8px;
+        }
+
+        /* Square Bracket Styling for Input Vectors */
+        .vector-column::before,
+        .vector-column::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            border: 2px solid #333;
+            pointer-events: none;
+        }
+
+        .vector-column::before {
+            left: 0;
+            border-right: none;
+        }
+
+        .vector-column::after {
+            right: 0;
+            border-left: none;
         }
 
         .cell-input {
-            width: 45px; text-align: center; font-family: 'Courier New', monospace;
-            font-size: 1.1em; border: 1px solid #eee; border-radius: 3px; padding: 5px;
+            width: 45px;
+            text-align: center;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.25em;
+            /* Slightly increased for readability */
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 5px;
         }
-        .cell-input:focus { border-color: #007bff; outline: none; background: #f0f8ff; }
 
-        .vector-label { font-weight: bold; margin-bottom: 8px; color: #555; }
-        
-        .action-btn { padding: 12px 30px; font-size: 1rem; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px; margin-top: 25px; font-weight: bold; }
-        .action-btn:hover { background: #218838; }
+        .cell-input:focus {
+            border-color: #007bff;
+            outline: none;
+            background: #f0f8ff;
+        }
 
-        .results-wrapper { margin-top: 30px; display: none; }
-        .result-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h3 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        .basis-container { display: flex; flex-wrap: wrap; gap: 20px; }
-        .vector-wrapper { display: inline-block; border-left: 2px solid #333; border-right: 2px solid #333; border-radius: 8px; padding: 5px; text-align: center; background: #fff; }
-        .vector-num { display: block; padding: 2px 8px; font-family: 'Courier New', monospace; font-weight: 600; }
-        .error { color: #d9534f; border-left: 5px solid #d9534f; padding: 15px; background: white; margin-top: 20px; display: none;}
+        .vector-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 50px;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: #218838;
+        }
+
+        .results-wrapper {
+            display: none;
+        }
+
+        .result-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .basis-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .vector-wrapper {
+            display: inline-block;
+            position: relative;
+            padding: 5px;
+            text-align: center;
+            background: #fff;
+        }
+
+        .vector-wrapper::before,
+        .vector-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            border: 2px solid #333;
+            pointer-events: none;
+        }
+
+        .vector-wrapper::before {
+            left: 0;
+            border-right: none;
+        }
+
+        .vector-wrapper::after {
+            right: 0;
+            border-left: none;
+        }
+
+        .vector-num {
+            display: block;
+            padding: 2px 8px;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #d9534f;
+            border-left: 5px solid #d9534f;
+            padding: 15px;
+            background: white;
+            margin-top: 20px;
+            display: none;
+        }
 
         .secondary-btn {
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             cursor: pointer;
             background: #6c757d;
             color: white;
@@ -58,11 +227,14 @@
             align-self: flex-end;
             margin-bottom: 2px;
         }
-        .secondary-btn:hover { background: #5a6268; }
+
+        .secondary-btn:hover {
+            background: #5a6268;
+        }
 
         .danger-btn {
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             cursor: pointer;
             background: #dc3545;
             color: white;
@@ -74,7 +246,10 @@
             align-self: flex-end;
             margin-bottom: 2px;
         }
-        .danger-btn:hover { background: #c82333; }
+
+        .danger-btn:hover {
+            background: #c82333;
+        }
 
         .subtitle {
             color: #666;
@@ -83,14 +258,58 @@
             font-size: 1rem;
             line-height: 1.5;
         }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            padding-bottom: 20px;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        .footer a {
+            color: #555;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .creator-link {
+            color: #555;
+            text-decoration: none;
+            line-height: 1.5;
+            transition: color 0.2s, text-decoration 0.2s;
+        }
+
+        .creator-link:hover {
+            color: #007bff !important;
+            /* Forces the blue color */
+            text-decoration: underline !important;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>Vector Basis Finder</h1>
     <p class="subtitle">
-        Enter a set of <span class="math-var">m</span> vectors in &#8477;<sup>n</sup> to determine the basis of their span.<br>
-        This tool calculates both the <strong>Subset Basis</strong> (linearly independent columns from your input) and the <strong>Reduced Basis</strong> (simplest unique form).
+        Enter a set of <span class="math-var">m</span> vectors in <span class="math-var">&#8477;<sup>n</sup></span> to
+        determine the basis of their
+        span.<br>
+        This tool calculates both the <strong>Subset Basis</strong> (linearly independent columns from your input) and
+        the <strong>Reduced Basis</strong> (simplest unique form).
     </p>
 
     <div class="setup-box">
@@ -102,7 +321,7 @@
             <label>Dimensions (<span class="math-var">n</span>)</label>
             <input type="number" id="dimCount" value="3" min="1" max="10" onchange="generateInputs()">
         </div>
-        
+
         <div style="display: flex; gap: 10px; margin-left: auto;">
             <button class="secondary-btn" onclick="randomizeInputs()">Randomize</button>
             <button class="danger-btn" onclick="resetInputs()">Reset 0</button>
@@ -110,22 +329,78 @@
     </div>
 
     <div id="vector-container"></div>
-    
-    <button class="action-btn" onclick="calculateBasis()">Calculate Basis</button>
+
+    <button id="calc-btn" class="action-btn" onclick="calculateBasis()">Calculate Basis</button>
+
+    <div style="height: 40px;"></div>
 
     <div id="error-box" class="error"></div>
 
     <div id="results-area" class="results-wrapper">
-        <div class="result-section">
-            <h3>1. Subset Basis</h3>
-            <p style="color:#666; font-size:0.9rem;">Linear independent vectors selected from your input.</p>
-            <div id="subset-container" class="basis-container"></div>
+        <div
+            style="background: #e8f5e9; border-left: 5px solid #28a745; border-radius: 4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; height: 50px;">
+            <span style="font-family: 'Segoe UI', sans-serif; font-weight: bold; font-size: 1.17em; color: #333;">
+                Dimension (Rank): <span id="dimension-result"></span>
+            </span>
         </div>
-        <div class="result-section">
-            <h3>2. Reduced Basis (RREF)</h3>
-            <p style="color:#666; font-size:0.9rem;">Simplest basis for the column space (often Identity).</p>
-            <div id="reduced-container" class="basis-container"></div>
+    </div>
+
+    <div class="result-section">
+        <h3>1. Subset Basis</h3>
+        <p style="color:#666; font-size:0.9rem;">Linearly independent vectors selected from your input.</p>
+        <div id="subset-container" class="basis-container"></div>
+    </div>
+    <div class="result-section">
+        <h3>2. Reduced Basis (RREF)</h3>
+        <p style="color:#666; font-size:0.9rem;">Simplest basis for the column space (often Identity).</p>
+        <div id="reduced-container" class="basis-container"></div>
+    </div>
+    </div>
+
+    <div class="footer"
+        style="display: flex; justify-content: center; gap: 80px; align-items: flex-start; text-align: left; padding-top: 30px;">
+
+        <div>
+            <div style="display: flex; gap: 10px;">
+                <span style="color: #888; font-weight: 600;">Project Repositories</span>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <a href="https://github.com/5kappa/Vector-Basis-Finder" target="_blank" class="creator-link"
+                        style="margin: 0;">
+                        <span style="font-size: 1.1em; margin-right: 5px;">🐍</span> Python (Flask)
+                    </a>
+
+                    <a href="https://github.com/Edriane72/Basis-Finder-SymPy-JavaSwing" target="_blank"
+                        class="creator-link" style="margin: 0;">
+                        <span style="font-size: 1.1em; margin-right: 5px;">☕</span> Java (Swing)
+                    </a>
+                </div>
+            </div>
         </div>
+
+        <div>
+            <div style="display: flex; gap: 6px;">
+                <span style="color: #888;">Made with <span style="color: #e25555;">&hearts;</span> by</span>
+
+                <div style="display: flex; flex-direction: column; text-align: left;">
+                    <a href="https://github.com/anicarnivore" target="_blank" class="creator-link">
+                        Antolin, Anicah Kim R.
+                    </a>
+                    <a href="https://github.com/Edriane72" target="_blank" class="creator-link">
+                        Bea, Edriane Josh M.
+                    </a>
+                    <a href="https://github.com/kuroketai" target="_blank" class="creator-link">
+                        Mentes, Matthew Sean Cody C.
+                    </a>
+                    <a href="https://github.com/5kappa" target="_blank" class="creator-link">
+                        Plotado, Jan Haji E.
+                    </a>
+                    <a href="https://github.com/GavinnMR" target="_blank" class="creator-link">
+                        Reolada, Gavinn M.
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -135,13 +410,13 @@
             const m = parseInt(document.getElementById('vectorCount').value);
             const n = parseInt(document.getElementById('dimCount').value);
             const container = document.getElementById('vector-container');
-            
-            container.innerHTML = ''; 
+
+            container.innerHTML = '';
 
             for (let i = 1; i <= m; i++) {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'vector-wrapper-input';
-                
+
                 const label = document.createElement('span');
                 label.className = 'vector-label';
                 label.innerHTML = `<span class="math-var">v</span><sub>${i}</sub>`;
@@ -157,9 +432,9 @@
                     input.placeholder = "0";
                     input.id = `vec-${i}-${j}`;
 
-                    input.addEventListener('focus', function() { this.select(); });
+                    input.addEventListener('focus', function () { this.select(); });
 
-                    input.addEventListener('keydown', function(e) {
+                    input.addEventListener('keydown', function (e) {
                         handleNavigation(e, i, j, m, n);
                     });
 
@@ -183,7 +458,7 @@
                         targetId = `vec-${currentVec + 1}-0`;
                     }
                 }
-            } 
+            }
             else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (currentRow > 0) {
@@ -218,17 +493,17 @@
             const n = parseInt(document.getElementById('dimCount').value);
             const resultsArea = document.getElementById('results-area');
             const errorBox = document.getElementById('error-box');
-            
+
             resultsArea.style.display = 'none';
             errorBox.style.display = 'none';
 
             let combinedText = "";
-            
+
             for (let i = 1; i <= m; i++) {
                 let vectorString = "";
                 for (let j = 0; j < n; j++) {
                     let val = document.getElementById(`vec-${i}-${j}`).value.trim();
-                    if(val === "") val = "0"; 
+                    if (val === "") val = "0";
                     vectorString += val + " ";
                 }
                 combinedText += vectorString.trim() + "\n";
@@ -245,15 +520,26 @@
 
                 if (data.status === 'success') {
                     resultsArea.style.display = 'block';
+
+                    // Update Dimension
+                    document.getElementById('dimension-result').innerText = data.basis.subset.length;
+
                     renderVectors(data.basis.subset, 'subset-container');
                     renderVectors(data.basis.reduced, 'reduced-container');
                 } else {
                     errorBox.innerHTML = "<strong>Error:</strong> " + data.message;
                     errorBox.style.display = 'block';
                 }
-            } catch (err) {
-                errorBox.innerHTML = "<strong>Network Error:</strong> Check console connection.";
+            } catch (error) {
+                console.error("Error:", error);
+                errorBox.innerText = "An error occurred connecting to the server.";
                 errorBox.style.display = 'block';
+            } finally {
+                // Restore Button State
+                btn.disabled = false;
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                btn.style.cursor = "pointer";
             }
         }
 
@@ -279,7 +565,7 @@
         function randomizeInputs() {
             const m = parseInt(document.getElementById('vectorCount').value);
             const n = parseInt(document.getElementById('dimCount').value);
-            
+
             for (let i = 1; i <= m; i++) {
                 for (let j = 0; j < n; j++) {
                     const field = document.getElementById(`vec-${i}-${j}`);
@@ -294,19 +580,20 @@
         function resetInputs() {
             const m = parseInt(document.getElementById('vectorCount').value);
             const n = parseInt(document.getElementById('dimCount').value);
-            
+
             for (let i = 1; i <= m; i++) {
                 for (let j = 0; j < n; j++) {
                     const field = document.getElementById(`vec-${i}-${j}`);
                     if (field) {
-                        field.value = ""; 
+                        field.value = "";
                     }
                 }
             }
-            
+
             document.getElementById('results-area').style.display = 'none';
             document.getElementById('error-box').style.display = 'none';
         }
     </script>
 </body>
+
 </html>
