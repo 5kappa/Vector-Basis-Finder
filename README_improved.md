@@ -46,8 +46,6 @@ Follow these steps to run the application on your local machine.
 | Flask | `>=2.0` | Web server and routing |
 | SymPy | `>=1.9` | Symbolic linear algebra computations |
 
-> Exact versions are pinned in `requirements.txt`.
-
 ### 1. Clone the Repository
 
 ```bash
@@ -111,4 +109,4 @@ For questions or feedback, feel free to reach out via the repository's [Issues](
 
 This revised README was created as an assignment for a Technical Writing class.
 
-The original README was accurate and concise, but (1) it never explained how to actually *use* the application once running, and (2) it lacked the standard sections (Contributing, License, Contact) expected of an open-source project. A **How to Use** section with a worked example was added to address both end-users and course evaluators, and a preview screenshot placeholder was included since the original had no visuals whatsoever. The dependencies table was added to surface version information that was previously hidden inside `requirements.txt`. Minor structural changes — standardizing dividers and merging the setup and run steps — were made to improve the document's overall consistency and flow.
+The original README was accurate and concise, but (1) it never explained how to actually *use* the application once running, and (2) it lacked the standard sections (Contributing, License, Contact) expected of an open-source project. A "How to Use" section was added to explicitly guide end-users through the data input process, and a preview screenshot placeholder was included since the original had no visuals whatsoever. The dependencies table was added to surface version information that was previously hidden inside `requirements.txt`. Finally, confusing developer notes were removed, and standard open-source sections—such as Contributing, License, and Contact—were appended to make the repository more professional and welcoming to collaborators.
